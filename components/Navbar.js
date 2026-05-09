@@ -4,7 +4,7 @@ const navItems = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Products", href: "/products" },
-  { label: "Farm Output", href: "/farm-output" },
+  { label: "Our Harvest", href: "/farm-output" },
   { label: "Gallery", href: "/gallery" },
   { label: "Contact", href: "/contact" },
   { label: "Admin", href: "/admin" },
@@ -15,7 +15,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/" className="text-xl font-semibold tracking-tight text-brand-700">
-          FarmFlow CRM
+          Onestop Veggies
         </Link>
         <nav className="hidden items-center gap-6 md:flex">
           {navItems.map((item) => (

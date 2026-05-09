@@ -4,8 +4,8 @@ export default function FarmOutput() {
   return (
     <div className="space-y-10">
       <section className="rounded-3xl bg-white p-8 shadow-sm">
-        <h1 className="text-3xl font-semibold text-slate-900">Farm Output</h1>
-        <p className="mt-4 text-slate-600">Monitor harvest progress, quantities, and daily production summaries.</p>
+        <h1 className="text-3xl font-semibold text-slate-900">Our Harvest</h1>
+        <p className="mt-4 text-slate-600">Monitor harvest progress, seasonal output, and daily production summaries for Onestop Veggies.</p>
       </section>
       <FarmOutputTable />
       <section className="rounded-3xl bg-white p-8 shadow-sm">
