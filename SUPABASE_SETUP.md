@@ -207,6 +207,38 @@ const getProductsViaREST = async () => {
 
 ---
 
+## STEP 4.1: Fix Permission Denied Errors
+If your API returns `permission denied for table ...`, then the table exists but your Supabase row-level security policies or API keys are not configured properly.
+
+Run these SQL statements in the Supabase SQL editor:
+
+```sql
+ALTER TABLE farm_output ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public read farm_output" ON farm_output
+  FOR SELECT USING (true);
+
+ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public insert contact_messages" ON contact_messages
+  FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow authenticated read contact_messages" ON contact_messages
+  FOR SELECT USING (auth.role() = 'authenticated');
+
+ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public insert orders" ON orders
+  FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public read orders" ON orders
+  FOR SELECT USING (true);
+```
+
+Then confirm your `.env.local` has the correct keys:
+- `NEXT_PUBLIC_SUPABASE_URL` should match your Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` should be the project anon key
+- `SUPABASE_SERVICE_ROLE_KEY` should be the project service role key from Settings → API
+
+Restart your dev server after updating `.env.local`.
+
+---
+
 ## STEP 5: Add Sample Data
 
 In **Table Editor**, add test data:

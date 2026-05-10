@@ -1,15 +1,9 @@
-import { supabaseAdmin } from "../../lib/supabaseClient";
+import { supabase, supabaseAdmin } from "../../lib/supabaseClient";
 
 export default async function handler(req, res) {
   try {
-    if (!supabaseAdmin) {
-      return res.status(500).json({ 
-        error: "Server not configured. Add SUPABASE_SERVICE_ROLE_KEY to .env.local" 
-      });
-    }
-
     if (req.method === "GET") {
-      const { data, error } = await supabaseAdmin
+      const { data, error } = await supabase
         .from("farm_output")
         .select("*")
         .order("harvest_date", { ascending: false });
@@ -22,6 +16,12 @@ export default async function handler(req, res) {
       res.status(200).json({ success: true, outputs: data || [] });
     } 
     else if (req.method === "POST") {
+      if (!supabaseAdmin) {
+        return res.status(500).json({
+          error: "Server not configured. Add SUPABASE_SERVICE_ROLE_KEY to .env.local to insert farm output records."
+        });
+      }
+
       const { product_id, harvest_date, quantity_kg, quality_notes, status } = req.body;
 
       if (!product_id || !harvest_date || !quantity_kg) {

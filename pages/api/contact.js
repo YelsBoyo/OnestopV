@@ -1,21 +1,15 @@
-import { supabaseAdmin } from "../../lib/supabaseClient";
+import { supabase } from "../../lib/supabaseClient";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
-      if (!supabaseAdmin) {
-        return res.status(500).json({ 
-          error: "Server not configured. Add SUPABASE_SERVICE_ROLE_KEY to .env.local" 
-        });
-      }
-
       const { name, email, phone, message, subject } = req.body;
       
       if (!name || !email || !message) {
         return res.status(400).json({ error: "Name, email, and message are required" });
       }
 
-      const { data, error } = await supabaseAdmin
+      const { data, error } = await supabase
         .from("contact_messages")
         .insert([{
           name,

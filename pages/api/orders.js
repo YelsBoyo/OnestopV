@@ -1,14 +1,8 @@
-import { supabaseAdmin } from "../../lib/supabaseClient";
+import { supabase } from "../../lib/supabaseClient";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
-      if (!supabaseAdmin) {
-        return res.status(500).json({ 
-          error: "Server not configured. Add SUPABASE_SERVICE_ROLE_KEY to .env.local" 
-        });
-      }
-
       const { customerName, customerEmail, customerPhone, deliveryAddress, items, totalPrice } = req.body;
       
       if (!customerName || !customerEmail || !customerPhone || !items || !totalPrice) {
@@ -17,7 +11,7 @@ export default async function handler(req, res) {
         });
       }
 
-      const { data, error } = await supabaseAdmin
+      const { data, error } = await supabase
         .from("orders")
         .insert([{
           customer_name: customerName,
