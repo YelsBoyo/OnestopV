@@ -23,6 +23,8 @@ export default function Admin() {
     router.push("/");
   };
 
+  const handleNavigate = (path) => () => router.push(path);
+
   if (!user) return <div>Loading...</div>;
 
   return (
@@ -54,10 +56,10 @@ export default function Admin() {
       <section className="rounded-3xl bg-white p-8 shadow-sm">
         <h2 className="text-2xl font-semibold text-slate-900">Quick actions</h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          <button className="rounded-3xl bg-brand-600 px-5 py-4 text-sm font-semibold text-white transition hover:bg-brand-700">Add output</button>
-          <button className="rounded-3xl border border-slate-200 bg-white px-5 py-4 text-sm font-semibold text-slate-900 hover:bg-slate-50">View orders</button>
-          <button className="rounded-3xl border border-slate-200 bg-white px-5 py-4 text-sm font-semibold text-slate-900 hover:bg-slate-50">Upload images</button>
-          <button className="rounded-3xl border border-slate-200 bg-white px-5 py-4 text-sm font-semibold text-slate-900 hover:bg-slate-50">See reports</button>
+          <button onClick={handleNavigate("/add-output")} className="rounded-3xl bg-brand-600 px-5 py-4 text-sm font-semibold text-white transition hover:bg-brand-700">Add output</button>
+          <button onClick={handleNavigate("/orders")} className="rounded-3xl border border-slate-200 bg-white px-5 py-4 text-sm font-semibold text-slate-900 hover:bg-slate-50">View orders</button>
+          <button onClick={handleNavigate("/gallery")} className="rounded-3xl border border-slate-200 bg-white px-5 py-4 text-sm font-semibold text-slate-900 hover:bg-slate-50">Upload images</button>
+          <button onClick={handleNavigate("/farm-output")} className="rounded-3xl border border-slate-200 bg-white px-5 py-4 text-sm font-semibold text-slate-900 hover:bg-slate-50">See reports</button>
         </div>
       </section>
     </div>

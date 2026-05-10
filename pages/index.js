@@ -1,4 +1,4 @@
-import supabase from "../supabaseClient";
+
 import HeroSection from "../components/HeroSection";
 import ProductShowcase from "../components/ProductShowcase";
 import FarmOutputTable from "../components/FarmOutputTable";
@@ -17,7 +17,7 @@ export default function Home() {
         </div>
       </section>
       <section className="rounded-3xl bg-white p-8 shadow-xl shadow-slate-200/70">
-        <h2 className="text-2xl font-semibold text-slate-900">Farm story</h2>
+        <h2 className="text-2xl font-semibold text-slate-900">Onestop Veggies</h2>
         <p className="mt-4 text-slate-600 leading-7">
           We pair sustainable farming with customer communication tech to deliver fresh vegetables directly to your table. Build audience trust with harvest updates, promotions, and fast order support.
         </p>
@@ -38,8 +38,8 @@ export default function Home() {
           <h2 className="text-2xl font-semibold text-slate-900">Testimonials</h2>
           <div className="mt-6 space-y-6">
             {[
-              { name: "Maria", quote: "The freshest produce and a fast WhatsApp order process." },
-              { name: "Ravi", quote: "The farm dashboard helps me keep product availability accurate." },
+              { name: "Digluck", quote: "The freshest produce and a fast WhatsApp order process." },
+              { name: "Wesley", quote: "The farm dashboard helps me keep product availability accurate." },
             ].map((item) => (
               <div key={item.name} className="rounded-3xl bg-slate-50 p-5">
                 <p className="text-slate-700">“{item.quote}”</p>
@@ -52,10 +52,8 @@ export default function Home() {
           <h2 className="text-2xl font-semibold">Join the farm community</h2>
           <p className="mt-4 text-slate-100 leading-7">Get harvest updates, promotions, and delivery alerts by connecting with us today.</p>
           <a
-            href={process.env.NEXT_PUBLIC_WHATSAPP_LINK || "https://wa.me/1234567890"}
+            href= "https://wa.me/254104830294?text=Hello%20Onestop%20Veggies!%20I%20would%20like%20to%20place%20an%20order."
             target="_blank"
-            rel="noreferrer"
-            className="mt-6 inline-flex rounded-full bg-white px-6 py-3 text-sm font-semibold text-brand-700 shadow-md shadow-brand-900/10"
           >
             Message on WhatsApp
           </a>

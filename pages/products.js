@@ -1,60 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabaseClient";
 
 const PRODUCT_CATEGORIES = ["All", "Fruits", "Vegetables"];
-const products = [
-  {
-    name: "Onion",
-    category: "Vegetables",
-    description: "Red and white onion varieties for kitchens and foodservice.",
-    season: "Year-round",
-    packaging: "Crates, boxes, bulk sacks",
-  },
-  {
-    name: "Watermelon",
-    category: "Fruits",
-    description: "Sweet, juicy watermelons harvested at peak ripeness.",
-    season: "Seasonal",
-    packaging: "Bulk pallets, crate-packed",
-  },
-  {
-    name: "Sweet Melon",
-    category: "Fruits",
-    description: "Premium sweet melons with fragrant aroma and smooth texture.",
-    season: "Seasonal",
-    packaging: "Boxed, bulk",
-  },
-  {
-    name: "Red Capsicum",
-    category: "Vegetables",
-    description: "Bright red capsicum perfect for salads and cooking.",
-    season: "Year-round",
-    packaging: "Crates, cartons",
-  },
-  {
-    name: "Green Capsicum",
-    category: "Vegetables",
-    description: "Garden-fresh green capsicum with crisp bite.",
-    season: "Year-round",
-    packaging: "Crates, cartons",
-  },
-  {
-    name: "Yellow Capsicum",
-    category: "Vegetables",
-    description: "Sunny yellow capsicum with mild sweetness.",
-    season: "Year-round",
-    packaging: "Crates, cartons",
-  },
-  {
-    name: "Tandora",
-    category: "Vegetables",
-    description: "Fresh tandora harvested daily and packed for wholesale buyers.",
-    season: "Year-round",
-    packaging: "Bulk crates, boxes",
-  },
-];
 
 export default function Products() {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("products")
+        .select("id, name, description, price, image_url, category, in_stock, quantity_available")
+        .order("name", { ascending: true });
+
+      if (error) {
+        console.error("Error fetching products:", error);
+        setError(error.message);
+        setProducts([]);
+      } else {
+        setProducts(data || []);
+        setError(null);
+      }
+
+      setLoading(false);
+    };
+
+    fetchProducts();
+  }, []);
+
   const filteredProducts = activeCategory === "All"
     ? products
     : products.filter((item) => item.category === activeCategory);
@@ -65,6 +42,7 @@ export default function Products() {
         <h1 className="text-3xl font-semibold text-slate-900">Our Fresh Produce</h1>
         <p className="mt-4 text-slate-600">Browse our current harvest and request a quote for bulk supply, restaurant orders, or wholesale delivery.</p>
       </section>
+
       <section className="rounded-3xl bg-white p-8 shadow-sm">
         <div className="flex flex-wrap gap-3">
           {PRODUCT_CATEGORIES.map((category) => (
@@ -82,25 +60,40 @@ export default function Products() {
           ))}
         </div>
       </section>
-      <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-        {filteredProducts.map((product) => (
-          <div key={product.name} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-slate-900">{product.name}</h2>
-            <p className="mt-3 text-slate-600">{product.description}</p>
-            <div className="mt-4 space-y-2 text-sm text-slate-600">
-              <p><span className="font-semibold text-slate-900">Seasonality:</span> {product.season}</p>
-              <p><span className="font-semibold text-slate-900">Packaging:</span> {product.packaging}</p>
-              <p><span className="font-semibold text-slate-900">Quality:</span> Traceable, farm-fresh produce.</p>
-            </div>
-            <a
-              href="/contact"
-              className="mt-6 inline-flex rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700"
-            >
-              Request Quote
-            </a>
+
+      <section className="rounded-3xl bg-white p-8 shadow-sm">
+        {loading ? (
+          <p className="text-slate-600">Loading products…</p>
+        ) : error ? (
+          <div className="rounded-3xl border border-amber-200 bg-amber-50 p-6 text-slate-900">
+            <h2 className="text-xl font-semibold text-amber-900">Products unavailable</h2>
+            <p className="mt-3 text-sm text-amber-800">Please contact your administrator for help.</p>
           </div>
-        ))}
-      </div>
+        ) : filteredProducts.length === 0 ? (
+          <p className="text-slate-600">No products found for this category.</p>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            {filteredProducts.map((product) => (
+              <div key={product.id} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                <h2 className="text-xl font-semibold text-slate-900">{product.name}</h2>
+                <p className="mt-3 text-slate-600">{product.description}</p>
+                <div className="mt-4 space-y-2 text-sm text-slate-600">
+                  <p><span className="font-semibold text-slate-900">Category:</span> {product.category || "—"}</p>
+                  <p><span className="font-semibold text-slate-900">Price:</span> KES {product.price ?? "—"}</p>
+                  <p><span className="font-semibold text-slate-900">Available:</span> {product.quantity_available ?? "—"} kg</p>
+                  <p><span className="font-semibold text-slate-900">Status:</span> {product.in_stock ? "In stock" : "Out of stock"}</p>
+                </div>
+                <a
+                  href="/contact"
+                  className="mt-6 inline-flex rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700"
+                >
+                  Request Quote
+                </a>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

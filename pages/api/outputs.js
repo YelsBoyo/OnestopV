@@ -1,30 +1,58 @@
 import { supabaseAdmin } from "../../lib/supabaseClient";
 
 export default async function handler(req, res) {
-  const supabase = supabaseAdmin;
-  if (!supabase) {
-    return res.status(500).json({ error: "Supabase service role key is not configured on the server." });
-  }
-
-  if (req.method === "GET") {
-    const { data, error } = await supabase.from("outputs").select("*");
-    if (error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(200).json({ outputs: data });
+  try {
+    if (!supabaseAdmin) {
+      return res.status(500).json({ 
+        error: "Server not configured. Add SUPABASE_SERVICE_ROLE_KEY to .env.local" 
+      });
     }
-  } else if (req.method === "POST") {
-    const { vegetable, quantity, status, harvest_date } = req.body;
-    const { data, error } = await supabase
-      .from("outputs")
-      .insert([{ vegetable, quantity, status, harvest_date }]);
 
-    if (error) {
-      res.status(500).json({ error: error.message });
-    } else {
-      res.status(200).json({ success: true, output: data[0] });
+    if (req.method === "GET") {
+      const { data, error } = await supabaseAdmin
+        .from("farm_output")
+        .select("*")
+        .order("harvest_date", { ascending: false });
+
+      if (error) {
+        console.error("Query error:", error);
+        return res.status(500).json({ error: error.message });
+      }
+
+      res.status(200).json({ success: true, outputs: data || [] });
+    } 
+    else if (req.method === "POST") {
+      const { product_id, harvest_date, quantity_kg, quality_notes, status } = req.body;
+
+      if (!product_id || !harvest_date || !quantity_kg) {
+        return res.status(400).json({ 
+          error: "Missing required fields: product_id, harvest_date, quantity_kg" 
+        });
+      }
+
+      const { data, error } = await supabaseAdmin
+        .from("farm_output")
+        .insert([{
+          product_id,
+          harvest_date,
+          quantity_kg,
+          quality_notes: quality_notes || null,
+          status: status || "harvested"
+        }])
+        .select();
+
+      if (error) {
+        console.error("Insert error:", error);
+        return res.status(500).json({ error: error.message });
+      }
+
+      res.status(201).json({ success: true, output: data?.[0] });
     }
-  } else {
-    res.status(405).json({ error: "Method not allowed" });
+    else {
+      res.status(405).json({ error: "Method not allowed" });
+    }
+  } catch (err) {
+    console.error("Handler error:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 }

@@ -66,10 +66,10 @@ export default function ContactSection() {
           </p>
           <div className="mt-8 space-y-4 text-slate-600">
             <p>
-              Phone: <a href="tel:+1234567890" className="text-brand-700 hover:text-brand-900">+1 234 567 890</a>
+              Phone: <a href="tel:+254104830294" className="text-brand-700 hover:text-brand-900">+254 104830294</a>
             </p>
             <p>
-              WhatsApp: <a href={process.env.NEXT_PUBLIC_WHATSAPP_LINK || "https://wa.me/1234567890"} className="text-brand-700 hover:text-brand-900" target="_blank" rel="noreferrer">Chat now</a>
+              WhatsApp: <a href={process.env.NEXT_PUBLIC_WHATSAPP_LINK || "https://wa.me/254104830294"} className="text-brand-700 hover:text-brand-900" target="_blank" rel="noreferrer">Chat now</a>
             </p>
             <p>Email: <a href="mailto:info@onestopveggies.com" className="text-brand-700 hover:text-brand-900">info@onestopveggies.com</a></p>
             <p>Address: Green Valley Farm, City outskirts – fresh produce ready for pickup and delivery.</p>
